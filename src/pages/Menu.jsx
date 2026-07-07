@@ -10,9 +10,44 @@ const Menu = () => {
   const { addItem } = useCart();
   const [selectedItem, setSelectedItem] = useState(null);
   const { t, translateDesc, language } = useLanguage();
+  const [showSplash, setShowSplash] = useState(() => {
+    return !sessionStorage.getItem('portavia_splash_shown');
+  });
+
+  useEffect(() => {
+    if (showSplash) {
+      const timer = setTimeout(() => {
+        sessionStorage.setItem('portavia_splash_shown', 'true');
+        setShowSplash(false);
+      }, 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [showSplash]);
 
   return (
-    <div className="pt-24 pb-16 bg-porta-cream min-h-screen">
+    <>
+      <AnimatePresence>
+        {showSplash && (
+          <motion.div
+            key="splash-screen"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: 'easeInOut' }}
+            className="fixed inset-0 z-[100] bg-[#021f15] flex items-center justify-center overflow-hidden"
+          >
+            <motion.img
+              src="/images/splash.jpg"
+              alt="Porta Via Splash"
+              initial={{ scale: 1.05, opacity: 0.95 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 2.5, ease: 'easeOut' }}
+              className="w-full h-full object-cover md:object-contain"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="pt-24 pb-16 bg-porta-cream min-h-screen">
       <div className="container mx-auto px-4 md:px-6">
         
         {/* Menu Header */}
@@ -166,6 +201,7 @@ const Menu = () => {
         )}
       </AnimatePresence>
     </div>
+    </>
   );
 };
 
