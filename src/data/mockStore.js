@@ -1,7 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, set, onValue, get, update } from 'firebase/database';
 
-const MENU_KEY = 'portavia_menu_v6';
-const ORDERS_KEY = 'portavia_orders_v4';
+const firebaseConfig = {
+  apiKey: "AIzaSyDAKPTevOT6Q74EhlhSM9oiVYnnvffB4pE",
+  authDomain: "portavia-48aa6.firebaseapp.com",
+  projectId: "portavia-48aa6",
+  storageBucket: "portavia-48aa6.firebasestorage.app",
+  messagingSenderId: "720914714540",
+  appId: "1:720914714540:web:e000b4d0ac4cadfe0ab409",
+  measurementId: "G-98W6CQ957R"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 const defaultMenu = [
   {
@@ -1122,183 +1134,147 @@ const defaultMenu = [
 
 // ─── Menu Functions ──────────────────────────────────────────────
 
-function getMenu() {
-  try {
-    const stored = localStorage.getItem(MENU_KEY);
-    if (stored) return JSON.parse(stored);
-  } catch {
-    // ignore
+// Initialize menu in database if not present on launch
+get(ref(db, 'menu')).then((snapshot) => {
+  if (!snapshot.exists()) {
+    set(ref(db, 'menu'), defaultMenu);
   }
-  localStorage.setItem(MENU_KEY, JSON.stringify(defaultMenu));
-  return defaultMenu;
-}
-
-function saveMenu(menu) {
-  localStorage.setItem(MENU_KEY, JSON.stringify(menu));
-  window.dispatchEvent(new CustomEvent('portavia_menu_updated'));
-}
+});
 
 export function useMenu() {
-  const [menu, setMenu] = useState(() => getMenu());
+  const [menu, setMenu] = useState(defaultMenu);
 
   useEffect(() => {
-    const handler = () => setMenu(getMenu());
-    window.addEventListener('portavia_menu_updated', handler);
-    return () => window.removeEventListener('portavia_menu_updated', handler);
+    const menuRef = ref(db, 'menu');
+    const unsubscribe = onValue(menuRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setMenu(data);
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   return menu;
 }
 
 export function updateMenuItem(categoryIdx, itemIdx, updatedItem) {
-  const menu = getMenu();
-  if (menu[categoryIdx] && menu[categoryIdx].items[itemIdx]) {
-    menu[categoryIdx].items[itemIdx] = { ...menu[categoryIdx].items[itemIdx], ...updatedItem };
-    saveMenu(menu);
-  }
+  const menuRef = ref(db, 'menu');
+  get(menuRef).then((snapshot) => {
+    const menu = snapshot.val();
+    if (menu && menu[categoryIdx] && menu[categoryIdx].items[itemIdx]) {
+      menu[categoryIdx].items[itemIdx] = { ...menu[categoryIdx].items[itemIdx], ...updatedItem };
+      set(menuRef, menu);
+    }
+  });
 }
 
 export function addMenuItem(categoryIdx, newItem) {
-  const menu = getMenu();
-  if (menu[categoryIdx]) {
-    menu[categoryIdx].items.push(newItem);
-    saveMenu(menu);
-  }
+  const menuRef = ref(db, 'menu');
+  get(menuRef).then((snapshot) => {
+    const menu = snapshot.val();
+    if (menu && menu[categoryIdx]) {
+      if (!menu[categoryIdx].items) menu[categoryIdx].items = [];
+      menu[categoryIdx].items.push(newItem);
+      set(menuRef, menu);
+    }
+  });
 }
 
 export function deleteMenuItem(categoryIdx, itemIdx) {
-  const menu = getMenu();
-  if (menu[categoryIdx] && menu[categoryIdx].items[itemIdx]) {
-    menu[categoryIdx].items.splice(itemIdx, 1);
-    saveMenu(menu);
-  }
+  const menuRef = ref(db, 'menu');
+  get(menuRef).then((snapshot) => {
+    const menu = snapshot.val();
+    if (menu && menu[categoryIdx] && menu[categoryIdx].items[itemIdx]) {
+      menu[categoryIdx].items.splice(itemIdx, 1);
+      set(menuRef, menu);
+    }
+  });
 }
 
 // ─── Orders Functions ────────────────────────────────────────────
 
-export function getOrders() {
-  try {
-    const stored = localStorage.getItem(ORDERS_KEY);
-    if (stored) return JSON.parse(stored);
-  } catch {
-    // ignore
-  }
-  return [];
-}
-
-function saveOrders(orders) {
-  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-  window.dispatchEvent(new CustomEvent('portavia_orders_updated'));
-}
-
 export function useOrders() {
-  const [orders, setOrders] = useState(() => getOrders());
-
-  const refresh = useCallback(() => {
-    setOrders(getOrders());
-  }, []);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    const handler = () => refresh();
-    window.addEventListener('portavia_orders_updated', handler);
-    window.addEventListener('storage', handler);
-    // Auto-refresh every 3 seconds
-    const interval = setInterval(refresh, 3000);
-    return () => {
-      window.removeEventListener('portavia_orders_updated', handler);
-      window.removeEventListener('storage', handler);
-      clearInterval(interval);
-    };
-  }, [refresh]);
+    const ordersRef = ref(db, 'orders');
+    const unsubscribe = onValue(ordersRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const list = Object.values(data);
+        list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setOrders(list);
+      } else {
+        setOrders([]);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   return orders;
 }
 
 export function addOrder(order) {
-  const orders = getOrders();
+  const newOrderId = 'ORD-' + Date.now();
   const newOrder = {
-    id: 'ORD-' + Date.now(),
+    id: newOrderId,
     status: 'pending',
     createdAt: new Date().toISOString(),
     ...order,
   };
-  orders.unshift(newOrder);
-  saveOrders(orders);
+  set(ref(db, `orders/${newOrderId}`), newOrder);
   return newOrder;
 }
 
 export function updateOrderStatus(orderId, newStatus) {
-  const orders = getOrders();
-  const idx = orders.findIndex(o => o.id === orderId);
-  if (idx !== -1) {
-    orders[idx].status = newStatus;
-    saveOrders(orders);
+  if (newStatus === 'deleted') {
+    set(ref(db, `orders/${orderId}`), null);
+  } else {
+    update(ref(db, `orders/${orderId}`), { status: newStatus });
   }
 }
 
 // --- Waiter Calls Functions ---
-const WAITER_CALLS_KEY = 'portavia_waiter_calls_v1';
-
-export function getWaiterCalls() {
-  try {
-    const stored = localStorage.getItem(WAITER_CALLS_KEY);
-    if (stored) return JSON.parse(stored);
-  } catch {
-    // ignore
-  }
-  return [];
-}
-
-function saveWaiterCalls(calls) {
-  localStorage.setItem(WAITER_CALLS_KEY, JSON.stringify(calls));
-  window.dispatchEvent(new CustomEvent('portavia_waiter_calls_updated'));
-}
 
 export function useWaiterCalls() {
-  const [calls, setCalls] = useState(() => getWaiterCalls());
-
-  const refresh = useCallback(() => {
-    setCalls(getWaiterCalls());
-  }, []);
+  const [calls, setCalls] = useState([]);
 
   useEffect(() => {
-    const handler = () => refresh();
-    window.addEventListener('portavia_waiter_calls_updated', handler);
-    window.addEventListener('storage', handler);
-    const interval = setInterval(refresh, 3000);
-    return () => {
-      window.removeEventListener('portavia_waiter_calls_updated', handler);
-      window.removeEventListener('storage', handler);
-      clearInterval(interval);
-    };
-  }, [refresh]);
+    const callsRef = ref(db, 'waiter_calls');
+    const unsubscribe = onValue(callsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const list = Object.values(data);
+        list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setCalls(list);
+      } else {
+        setCalls([]);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   return calls;
 }
 
 export function addWaiterCall(tableNumber) {
-  const calls = getWaiterCalls();
+  const newCallId = 'CALL-' + Date.now();
   const newCall = {
-    id: 'CALL-' + Date.now(),
+    id: newCallId,
     table: tableNumber,
     status: 'pending',
     createdAt: new Date().toISOString(),
   };
-  calls.unshift(newCall);
-  saveWaiterCalls(calls);
+  set(ref(db, `waiter_calls/${newCallId}`), newCall);
   return newCall;
 }
 
 export function updateWaiterCallStatus(callId, newStatus) {
-  const calls = getWaiterCalls();
-  const idx = calls.findIndex(c => c.id === callId);
-  if (idx !== -1) {
-    if (newStatus === 'completed') {
-      calls[idx].status = 'completed';
-    } else if (newStatus === 'deleted') {
-      calls.splice(idx, 1);
-    }
-    saveWaiterCalls(calls);
+  if (newStatus === 'deleted') {
+    set(ref(db, `waiter_calls/${callId}`), null);
+  } else {
+    update(ref(db, `waiter_calls/${callId}`), { status: newStatus });
   }
 }
 

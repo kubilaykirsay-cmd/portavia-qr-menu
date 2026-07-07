@@ -4,6 +4,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, MapPin, Phone, User, UtensilsCrossed, Truck, MessageSquare, CheckCircle } from 'lucide-react';
+import { addOrder } from '../data/mockStore';
 
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
@@ -41,13 +42,8 @@ const Checkout = () => {
       note: formData.note,
     };
 
-    // Save to localStorage (mock store)
-    const existingOrders = JSON.parse(localStorage.getItem('portavia_orders') || '[]');
-    existingOrders.push(order);
-    localStorage.setItem('portavia_orders', JSON.stringify(existingOrders));
-
-    // Dispatch custom event for admin panel real-time updates
-    window.dispatchEvent(new CustomEvent('portavia_new_order', { detail: order }));
+    // Save to Firebase Database
+    addOrder(order);
 
     setOrderId(order.id);
     setIsSubmitted(true);
