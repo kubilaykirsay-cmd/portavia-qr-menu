@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useWaiterCalls, updateWaiterCallStatus } from '../../data/mockStore';
 import { Bell, Check, Trash2, Clock, RefreshCw } from 'lucide-react';
 
@@ -104,7 +104,7 @@ export default function WaiterCallsList() {
   const pendingCalls = calls.filter(c => c.status === 'pending');
   const pendingCount = pendingCalls.length;
   
-  const [prevIds, setPrevIds] = useState(() => pendingCalls.map(c => c.id));
+  const prevIdsRef = useRef(pendingCalls.map(c => c.id));
   const [audioState, setAudioState] = useState('suspended');
 
   // Track the audio context state
@@ -125,13 +125,13 @@ export default function WaiterCallsList() {
   // Play sound when a new call ID is detected
   useEffect(() => {
     const currentIds = pendingCalls.map(c => c.id);
-    const hasNewCall = currentIds.some(id => !prevIds.includes(id));
+    const hasNewCall = currentIds.some(id => !prevIdsRef.current.includes(id));
     
     if (hasNewCall) {
       playLongChime();
     }
-    setPrevIds(currentIds);
-  }, [pendingCalls, prevIds]);
+    prevIdsRef.current = currentIds;
+  }, [pendingCalls]);
 
   const enableAudio = () => {
     initAudioContext();
