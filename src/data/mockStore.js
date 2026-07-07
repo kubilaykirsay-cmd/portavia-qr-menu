@@ -1,301 +1,86 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const MENU_KEY = 'portavia_menu_v5';
+const MENU_KEY = 'portavia_menu_v6';
 const ORDERS_KEY = 'portavia_orders_v4';
 
 const defaultMenu = [
   {
-    "title": "Pizzalar",
+    "title": "Başlangıçlar",
     "items": [
       {
-        "name": "Pizza Margherita",
-        "desc": "Domatesin doğal asiditesi, mozarella peyniri, taze fesleğen ve zeytinyağının yalın dokunuşuyla bütünleşen zamansız bir klasik.",
-        "price": "₺390",
-        "image": "/images/margherita.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
+        "id": "B-1",
+        "name": "Palline di Ricotta al Limone",
+        "desc": "Ricotta peyniri, Hindistan cevizi, limon kabuğu ve acı bal ile üç adet olarak servis edilir. / Three ricotta bites with coconut, lemon zest and hot honey. (440 kcal / porsiyon)",
+        "price": "₺230",
+        "image": ""
       },
       {
-        "name": "Pizza Melfi",
-        "desc": "İstiridye mantarı, közlenmiş patlıcan, cherry domates, kırmızı soğan ve siyah zeytinin dengeli uyumuyla hazırlanan özel tarif.",
-        "price": "₺460",
-        "image": "/images/melfi.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
+        "id": "B-2",
+        "name": "Patate Rubino",
+        "desc": "Fırınlanmış çıtır baby patates, pancar kreması, Parmesan peyniri, taze kekik ve kurutulmuş acı biber. / Crispy roasted baby potatoes with beetroot cream, Parmesan, fresh thyme and dried chili. (600 kcal / porsiyon)",
+        "price": "₺280",
+        "image": ""
       },
       {
-        "name": "Pizza Quattro Formaggi",
-        "desc": "Mozarella, gorgonzola, ricotta ve parmesan peynirlerinin katmanlı lezzetlerini bir araya getiren güçlü ve rafine bir İtalyan yorumu.",
-        "price": "₺510",
-        "image": "/images/quattro-formaggi.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
+        "id": "B-3",
+        "name": "Roast Beef al Balsamico",
+        "desc": "İnce dilimlenmiş dana roast beef, Parmesan dilimleri, zeytinyağı ve üzüm pekmezli balzamik sos; taze roka ile servis edilir. / Thinly sliced roast beef with Parmesan, olive oil and grape-molasses balsamic sauce, served with fresh rocket. (750 kcal / porsiyon)",
+        "price": "₺410",
+        "image": ""
+      }
+    ]
+  },
+  {
+    "title": "Ana Yemekler",
+    "items": [
+      {
+        "id": "AY-1",
+        "name": "PIENZA",
+        "desc": "Jumbo karides, krema, limon kabuğu, taze biberiye, zeytinyağı ve taze çekilmiş karabiber. / Jumbo shrimp, cream, lemon zest, fresh rosemary, olive oil and freshly ground black pepper. (740 kcal)",
+        "price": "₺610",
+        "image": ""
       },
       {
-        "name": "Pizza Pepperoni",
-        "desc": "Mozarella peyniri üzerinde dana pepperoninin karakteristik aromasıyla öne çıkan sade ve iddialı bir lezzet.",
-        "price": "₺580",
-        "image": "/images/pepperoni.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Pizza Pollo",
-        "desc": "Izgara tavuk, kırmızı soğan ve kestane mantarının parmesan peyniriyle zenginleştiği, taze kekik ve zeytinyağı ile tamamlanan özel tarif.",
-        "price": "₺520",
-        "image": "/images/pollo.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Pizza Bianca",
-        "desc": "Parmesan kremasının kadifemsi dokusu, istiridye mantarı, sarımsak ve közlenmiş patlıcanın zarif uyumuyla hazırlanan özel lezzet.",
-        "price": "₺490",
-        "image": "/images/bianca.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Pizza Folingo",
-        "desc": "Füme kaburga, roka ve parmesan peynirinin güçlü karakterini zeytinyağının aromasıyla buluştururan imza lezzetimiz.",
+        "id": "AY-2",
+        "name": "POLLO PICCATA",
+        "desc": "Tereyağında pişirilmiş marine tavuk, parmesan kreması, kapari, limon suyu, limon kabuğu ve taze fesleğen. / Butter-cooked marinated chicken, Parmesan cream, capers, lemon juice, lemon zest and fresh basil. (900 kcal)",
         "price": "₺620",
-        "image": "/images/folingo.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
+        "image": ""
       },
       {
-        "name": "Pizza Marino",
-        "desc": "Jumbo karides, roka ve parmesan peynirinin Akdeniz karakterini yansıtan, zeytinyağının zarif dokunuşuyla tamamlanan seçkin lezzet.",
-        "price": "₺540",
-        "image": "/images/marino.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
+        "id": "AY-3",
+        "name": "POLLO PARMIGIANA",
+        "desc": "Tereyağında pişirilmiş marine tavuk, San Marzano domates sosu, kurutulmuş acı biber, taze kekik ve rendelenmiş Parmesan peyniri. / Butter-cooked marinated chicken, San Marzano tomato sauce, dried chili, fresh thyme and grated Parmesan. (980 kcal)",
+        "price": "₺640",
+        "image": ""
       },
       {
-        "name": "Pizza Frutti di Mare",
-        "desc": "Jumbo karides ve ahtapotun denizden gelen güçlü aromalarını roka ve parmesan peyniriyle buluştururan özel deniz mahsulleri yorumu.",
-        "price": "₺630",
-        "image": "/images/frutti-di-mare.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
+        "id": "AY-4",
+        "name": "POLLO MIMOSA",
+        "desc": "Tereyağında pişirilmiş marine tavuk, pesto sos, krema, kuş üzümü ve kavrulmuş çam fıstığı. / Butter-cooked marinated chicken, pesto sauce, cream, currants and toasted pine nuts. (1250 kcal)",
+        "price": "₺660",
+        "image": ""
       },
       {
-        "name": "Pizza Ferentino",
-        "desc": "Dana sucuk, közlenmiş biber, istiridye mantarı ve siyah zeytinin dengeli birlikteliğiyle hazırlanan karakter sahibi tarif.",
-        "price": "₺540",
-        "image": "/images/ferentino.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Pizza Italiana",
-        "desc": "Dana jambon, ricotta peyniri ve sarımsaklı pesto sosun kusursuz uyumuyla hazırlanan İtalyan mutfağından ilham alan rafine lezzet.",
-        "price": "₺580",
-        "image": "/images/italiana.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Pizza Anatolia",
-        "desc": "Çemensiz pastırma ve dana sucuğun zengin aromalarını mozarella peyniriyle buluşturan, Anadolu'dan ilham alan güçlü yorum.",
-        "price": "₺650",
-        "image": "/images/anatolia.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Luna Rossa",
-        "desc": "Burrata peyniri, vişne ve kavrulmuş cevizin sıra dışı uyumunu limon kabuğu, taze fesleğen ve acı bal dokunuşuyla taçlandıran imza lezzet.",
-        "price": "₺900",
-        "image": "/images/luna-rossa.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Tartufo Bianco",
-        "desc": "Karamelize soğan, kavrulmuş ceviz ve parmesan peynirin derin aromalarını beyaz trüf yağı ve taze kekikle buluşturan zarif gastronomi deneyimi.",
+        "id": "AY-5",
+        "name": "FRUTTI DI MARE",
+        "desc": "Marine ahtapot, marine jumbo karides, mor soğan, közlenmiş patlıcan, sarımsak, portakal kabuğu ve krema. / Marinated octopus and jumbo shrimp, red onion, roasted eggplant, garlic, orange zest and cream. (770 kcal)",
         "price": "₺710",
-        "image": "/images/tartufo-bianco.png",
-        "options": [
-          {
-            "name": "Hamur Seçimi",
-            "items": [
-              "İnce Hamur (Ücretsiz)"
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "title": "Makarnalar",
-    "items": [
-      {
-        "name": "Penne Arrabbiata",
-        "desc": "San Marzano domateslerinin yoğun aroması, sarımsak ve kuru biberin karakteristik dokunuşlarıyla buluşur.",
-        "image": "",
-        "price": "₺390"
+        "image": ""
       },
       {
-        "name": "Spaghetti Bolognese",
-        "desc": "Uzun süre pişirilerek derinleşen dana ragü sosu, San Marzano domatesleri ve parmesan peyniriyle tamamlanır.",
-        "image": "",
-        "price": "₺460"
+        "id": "AY-6",
+        "name": "MANZO CON CILIEGIE",
+        "desc": "Tereyağında mühürlenmiş dana bonfile, vişne, taze kekik ve havuç kreması. / Butter-seared beef tenderloin, sour cherries, fresh thyme and carrot cream. (800 kcal)",
+        "price": "₺950",
+        "image": ""
       },
       {
-        "name": "Spaghetti Carbonara",
-        "desc": "Yumurta sarısı, parmesan peyniri ve çemensiz pastırmanın kusursuz uyumuyla hazırlanan Roma klasiği.",
-        "image": "",
-        "price": "₺490"
-      },
-      {
-        "name": "Fettucine Alfredo",
-        "desc": "Parmesan kremasının kadifemsi dokusu, marine tavuk ve limon kabuğunun zarif aromalarıyla buluşur.",
-        "image": "",
-        "price": "₺420"
-      },
-      {
-        "name": "Fettucine Gamberi",
-        "desc": "Jumbo karides, parmesan kreması ve taze fesleğenin dengeli birlikteliğiyle hazırlanan rafine deniz mahsulleri yorumu.",
-        "image": "",
-        "price": "₺460"
-      },
-      {
-        "name": "Fettucine Frutti di Mare",
-        "desc": "Marine ahtapot ve jombo karidesin denizden gelen karakteri, ricotta ve San Marzano domateslerinin yumuşak dokusuyla bütünleşir.",
-        "image": "",
-        "price": "₺520"
-      },
-      {
-        "name": "Tortellini Della Casa",
-        "desc": "Peynir dolgulu tortellini, istiridye mantarı ve parmesan kremasının zengin aromalarıyla tamamlanan ev yapımı lezzet.",
-        "image": "",
-        "price": "₺590"
-      },
-      {
-        "name": "Ravioli Rosmarino",
-        "desc": "Peynir dolgulu ravioli, kestane mantarı ve parmesan kremasının uyumunu biberiyenin zarif notalarıyla buluşturur.",
-        "image": "",
-        "price": "₺590"
-      },
-      {
-        "name": "Tagliatelle Bosco",
-        "desc": "Armutun doğal tatlılığı, kavrulmuş cevizin karakteristik dokusu ve parmesan kremasının kadifemsi yapısını taze kekik notalarıyla buluşturan imza lezzet.",
-        "image": "",
-        "price": "₺510"
-      },
-      {
-        "name": "Rigatoni Amarena",
-        "desc": " Karamelize soan, vişne ve gorgonzolla peynirinin sıra dışı uyumuyla hazırlanan tatlı ve tuzlu notaları dengeli şekilde bir araya getiren cesur yorum.",
-        "image": "",
-        "price": "₺490"
-      }
-    ]
-  },
-  {
-    "title": "Salatalar",
-    "items": [
-      {
-        "name": "Insalata Pollo",
-        "desc": "Izgara tavuk dilimleri, iceberg marulun ferah dokusu ve cherry domatesin canlı aromasıyla buluşur. Mısırın hafif tatlı notaları, özel Santa sos ve balzamik sosun dengeli uyumuyla tamamlanırken biberiye dokunuşu lezzete karakter kazandırır.",
-        "image": "",
-        "price": "₺390"
-      },
-      {
-        "name": "Buratta e Pera",
-        "desc": "Buratta peynirinin kremsi dokusunu; armutun zarif tatlılığı, pancarın topraksı karakteri ve taze rokanın canlı notalarıyla buluşturan özel tarif. Fıstık içi, limon kabuğu rendesi ve fesleğenli zeytinyağı ile tamamlanır.",
-        "image": "",
-        "price": "₺710"
-      },
-      {
-        "name": "Insalata Tartufo ",
-        "desc": "Rokanın hafif bibrerimsi karakterini, parmesan parçalarının yoğun aroması ve beyaz trüf yağının zarif dokunuşuyla buluşturan rafine bir lezzet. Cherry domates ve limon notalarıyla dengelenir.",
-        "image": "",
-        "price": "₺610"
-      },
-      {
-        "name": "Insalata Amarena",
-        "desc": "Taze vişnenin canlı aroması, suda mozarella ve rokanın ferah karakteriyle buluşur. Kavrulmuş ceviz, parmesan ve bal-limon sosunun dengeli dokunuşuyla tamamlanır.",
-        "image": "",
-        "price": "₺460"
+        "id": "AY-7",
+        "name": "FILETTO AL CAFFÈ",
+        "desc": "Tereyağlı dana bonfile, espresso, mor soğan, taze biberiye, tane karabiber ve pancar kreması. / Butter-cooked beef tenderloin, espresso, red onion, fresh rosemary, black peppercorns and beetroot cream. (800 kcal)",
+        "price": "₺950",
+        "image": ""
       }
     ]
   },
@@ -303,187 +88,399 @@ const defaultMenu = [
     "title": "Burgerler",
     "items": [
       {
-        "name": "Black Burger",
-        "desc": "Siyah burger ekmeği, dana burger köftesi (120 gr.), füme kaburga, kremalı istiridye mantarı, ızgara ananas",
-        "image": "",
-        "price": "₺520"
+        "id": "BG-1",
+        "name": "BURGER APHO VERDE",
+        "desc": "Dana burger köftesi (120 g), cherry domates, taze roka, Parmesan peyniri ve pesto sos. Elma dilim patates ile servis edilir. / Beef burger patty (120 g), cherry tomatoes, fresh arugula, Parmesan cheese and pesto sauce. Served with apple wedge potatoes. (910 kcal / porsiyon)",
+        "price": "₺520",
+        "image": ""
       },
       {
-        "name": "Porta Burger",
-        "desc": "Dana burger köftesi (120 gr.), cherry domates, taze roka, parmesan peyniri, pesto sos",
-        "image": "",
-        "price": "₺460"
+        "id": "BG-2",
+        "name": "BLACK BURGER",
+        "desc": "Siyah burger ekmeği, 120 g dana burger köftesi, füme kaburga, kremalı istiridye mantarı ve ızgara ananas. Elma dilim patates ile servis edilir. / Black burger bun, 120 g beef burger patty, smoked brisket, creamy oyster mushrooms and grilled pineapple. Served with apple wedge potatoes. (1040 kcal / porsiyon)",
+        "price": "₺610",
+        "image": ""
       }
     ]
   },
   {
-    "title": "Izgara Yemekleri",
+    "title": "Pizzalar",
     "items": [
       {
-        "name": "Pollo Picatta",
-        "desc": "Tereyağında son dokunuşu yapılan tavuk göğsü kaparinin karakteristik aroması ve limonun canlı notalarıyla buluşur. Parmesan kremasının kadifemsi dokusuyla tamamlanan zarif İtalyan klasiği.",
-        "image": "",
-        "price": "₺430"
+        "id": "PZ-1",
+        "name": "MARGHERITA",
+        "desc": "Domates sosu, mozzarella peyniri, cherry domates ve fesleğen yağı. / Tomato sauce, mozzarella cheese, cherry tomatoes and basil oil. (820 kcal)",
+        "price": "₺450",
+        "image": "/images/margherita.png"
       },
       {
-        "name": "Pollo Parmigiana",
-        "desc": "Izgara tavuk göğsü, San Marzano domateslerinin yoğun aroması ve taze biberiyenin Akdeniz karakteriyle buluşur. Sade görünümün altında derin lezzetler barındıran geleneksel yorum.",
-        "image": "",
-        "price": "₺450"
+        "id": "PZ-2",
+        "name": "POLLO",
+        "desc": "Domates sosu, mozzarella, marine tavuk, köz patlıcan, mor soğan, kestane mantarı, taze kekik ve zeytinyağı. / Tomato sauce, mozzarella, marinated chicken, roasted eggplant, red onion, chestnut mushrooms, fresh thyme and olive oil. (960 kcal)",
+        "price": "₺540",
+        "image": "/images/pollo.png"
       },
       {
-        "name": "Pollo Mimosa",
-        "desc": "Fesleğenli pesto sosun canlı aroması, parmesan peyniri ve kremsi dokularla zenginleşir. Limon kabuğunun ferah notaları ve zeytinyağının zarif dokunuşuyla tamamlanan imza tarif.",
-        "image": "",
-        "price": "₺470"
+        "id": "PZ-3",
+        "name": "ANATOLIA",
+        "desc": "Domates sosu, mozzarella, dana sucuk, siyah zeytin, közlenmiş biber ve istiridye mantarı. / Domates sosu, mozzarella, beef sausage, black olives, roasted peppers and oyster mushrooms. (1100 kcal)",
+        "price": "₺560",
+        "image": "/images/anatolia.png"
+      },
+      {
+        "id": "PZ-4",
+        "name": "QUATTRO FORMAGGI",
+        "desc": "Domates sosu, mozzarella, gorgonzola, parmesan ve ricotta peynirleri. / Tomato sauce, mozzarella, gorgonzola, Parmesan and ricotta cheeses. (970 kcal)",
+        "price": "₺580",
+        "image": "/images/quattro-formaggi.png"
+      },
+      {
+        "id": "PZ-5",
+        "name": "PESCA",
+        "desc": "Domates sosu, mozzarella, gorgonzola, sotelenmiş şeftali, karanfil aroması, portakal kabuğu ve acı yağ. / Tomato sauce, mozzarella, gorgonzola, sautéed peach, clove aroma, orange zest and chili oil. (920 kcal)",
+        "price": "₺580",
+        "image": ""
+      },
+      {
+        "id": "PZ-6",
+        "name": "FRUTTI DI MARE",
+        "desc": "Domates sosu, mozzarella, marine jumbo karides, marine baby ahtapot, fesleğen yağı ve limon kabuğu. / Tomato sauce, mozzarella, marinated jumbo shrimp, baby octopus, basil oil and lemon zest. (980 kcal)",
+        "price": "₺640",
+        "image": "/images/frutti-di-mare.png"
+      },
+      {
+        "id": "PZ-7",
+        "name": "ITALIANA",
+        "desc": "Domates sosu, mozzarella, dana roast beef, közlenmiş patlıcan, ricotta ve pesto sos. / Tomato sauce, mozzarella, roast beef, roasted eggplant, ricotta and pesto sauce. (1030 kcal)",
+        "price": "₺660",
+        "image": "/images/italiana.png"
+      },
+      {
+        "id": "PZ-8",
+        "name": "NOTTE",
+        "desc": "Domates sosu, mozzarella, toz espresso, dana tiftik, karamelize soğan, portakal kabuğu ve limon yağı. / Tomato sauce, mozzarella, espresso powder, pulled beef, caramelized onion, orange zest and lemon oil. (1000 kcal)",
+        "price": "₺670",
+        "image": ""
+      },
+      {
+        "id": "PZ-9",
+        "name": "FOLIGNO",
+        "desc": "Domates sosu, mozzarella, dana füme kaburga, roka, parmesan ve zeytinyağı. / Tomato sauce, mozzarella, smoked beef rib, arugula, Parmesan and olive oil. (1170 kcal)",
+        "price": "₺680",
+        "image": "/images/folingo.png"
+      },
+      {
+        "id": "PZ-10",
+        "name": "TARTUFO BIANCO",
+        "desc": "Parmesan kreması, mozzarella, istiridye mantarı, taze kekik, trüf yağı ve trüf püresi. / Parmesan cream, mozzarella, oyster mushrooms, fresh thyme, truffle oil and truffle purée. (1030 kcal)",
+        "price": "₺990",
+        "image": "/images/tartufo-bianco.png"
+      },
+      {
+        "id": "PZ-11",
+        "name": "LUNA ROSSA",
+        "desc": "Domates sosu, mozzarella, burrata, vişne, kavrulmuş ceviz, fesleğen yağı, limon kabuğu ve acı bal. / Tomato sauce, mozzarella, burrata, sour cherries, roasted walnuts, basil oil, lemon zest and hot honey. (1300 kcal)",
+        "price": "/images/luna-rossa.png"
+      },
+      {
+        "id": "PZ-12",
+        "name": "TARTUFO",
+        "desc": "Domates sosu, mozzarella, trüflü mantar, karamelize soğan, kavrulmuş badem, parmesan ve limon yağı. / Domates sosu, mozzarella, truffled mushrooms, caramelized onion, roasted almonds, Parmesan and lemon oil. (950 kcal)",
+        "price": "₺5.500",
+        "image": ""
       }
     ]
   },
   {
-    "title": "Tava Yemekleri",
+    "title": "Makarnalar",
     "items": [
       {
-        "name": "Pienza",
-        "desc": "Jumbo karidesin denizden gelen karakteri San Marzano domateslerinin canlı aroması ve taze çekilmiş karabiber notalarıyla buluşur. Biberiyenin zarif dokunuşuyla tamamlanan Akdeniz esintili özek tarif.",
-        "image": "",
-        "price": "₺460"
+        "id": "MK-1",
+        "name": "SPAGHETTI ALLA PERA",
+        "desc": "Tereyağı, karanfil, armut, limon suyu, limon kabuğu, acı bal, rendelenmiş Parmesan peyniri ve taze çekilmiş karabiber. / Butter, clove, pear, lemon juice and zest, hot honey, grated Parmesan and freshly ground black pepper. (630 kcal / porsiyon)",
+        "price": "₺510",
+        "image": ""
       },
       {
-        "name": "Frutti di Mare al Forno",
-        "desc": "Ahtapot ve jumbo karidesin zengin deniz aromalarını; San Marzano domatesleri, közlenmiş patlıcan ve sarımsağın derin karakteriyle buluşturan özel yorum. Krema, limon kabuğu ve roka ile dengelenerek servis edilir.",
-        "image": "",
-        "price": "₺560"
+        "id": "MK-2",
+        "name": "FETTUCCINE ALFREDO",
+        "desc": "Parmesan kreması, tereyağı, marine tavuk, taze kekik ve limon kabuğu. / Parmesan cream, butter, marinated chicken, fresh thyme and lemon zest. (950 kcal / porsiyon)",
+        "price": "₺520",
+        "image": ""
       },
       {
-        "name": "Pollo al Funghi",
-        "desc": "arine tavuk, istiridye mantarı ve kestane mantarının aromatik birlikteliğini kremsi dokular ve taze biberiye notalarıyla tamamlayan zarif İtalyan klasiği.",
-        "image": "",
-        "price": "₺420"
+        "id": "MK-3",
+        "name": "FETTUCCINE GAMBERI",
+        "desc": "Jumbo karides, krema, fesleğen yağı, limon suyu ve taze çekilmiş karabiber. / Jumbo shrimp, cream, basil oil, lemon juice and freshly ground black pepper. (800 kcal / porsiyon)",
+        "price": "₺550",
+        "image": ""
+      },
+      {
+        "id": "MK-4",
+        "name": "LINGUINE AL LIMONE",
+        "desc": "Parmesan kreması, tereyağı, kavrulmuş badem, taze fesleğen ve limon kabuğu. / Parmesan cream, butter, toasted almonds, fresh basil and lemon zest. (850 kcal / porsiyon)",
+        "price": "₺550",
+        "image": ""
+      },
+      {
+        "id": "MK-5",
+        "name": "TAGLIATELLE BOSCO",
+        "desc": "Armut, kavrulmuş ceviz, taze kekik, krema, acı bal ve taze çekilmiş karabiber. / Pear, toasted walnuts, fresh thyme, cream, hot honey and freshly ground black pepper. (750 kcal / porsiyon)",
+        "price": "₺560",
+        "image": ""
+      },
+      {
+        "id": "MK-6",
+        "name": "SPAGETTI CARBONARA",
+        "desc": "Yumurta sarısı, dana roast beef, Parmesan peyniri ve taze çekilmiş karabiber. / Egg yolk, roast beef, Parmesan cheese and freshly ground black pepper. (630 kcal / porsiyon)",
+        "price": "₺570",
+        "image": ""
+      },
+      {
+        "id": "MK-7",
+        "name": "RIGATONI ALL'AMARENA",
+        "desc": "Krema, karamelize soğan, Gorgonzola peyniri, vişne ve taze çekilmiş karabiber. / Cream, caramelized onion, Gorgonzola, sour cherry and freshly ground black pepper. (730 kcal / porsiyon)",
+        "price": "₺580",
+        "image": ""
+      },
+      {
+        "id": "MK-8",
+        "name": "RAVIOLI AL ROSMARINO",
+        "desc": "Peynir dolgulu taze ravioli, istiridye mantarı, krema, taze biberiye ve vişne. / Fresh cheese-filled ravioli, oyster mushrooms, cream, fresh rosemary and sour cherry. (890 kcal / porsiyon)",
+        "price": "₺610",
+        "image": ""
+      },
+      {
+        "id": "MK-9",
+        "name": "TORTELLINI DELLA CASA",
+        "desc": "Peynir dolgulu taze tortellini, kestane mantarı, krema, limon yağı ve kavrulmuş ceviz. / Fresh cheese-filled tortellini, chestnut mushrooms, cream, lemon oil and toasted walnuts. (1000 kcal / porsiyon)",
+        "price": "₺620",
+        "image": ""
+      },
+      {
+        "id": "MK-10",
+        "name": "AGNOLOTTI ALLA ZUCCA",
+        "desc": "Bal kabağı, mozzarella ve ricotta dolgulu taze agnolotti; tereyağı, çıtır adaçayı ve fesleğen yağı ile servis edilir. / Fresh agnolotti filled with pumpkin, mozzarella and ricotta; served with butter, crispy sage and basil oil. (790 kcal / porsiyon)",
+        "price": "₺670",
+        "image": ""
+      },
+      {
+        "id": "MK-11",
+        "name": "RAVIOLI DI MANZO",
+        "desc": "Dana eti dolgulu taze ravioli, San Marzano domates sosu, sarımsak, kurutulmuş acı biber, taze kekik ve zeytinyağı. / Fresh beef-filled ravioli with San Marzano tomato sauce, garlic, dried chili, fresh thyme and olive oil. (600 kcal / porsiyon)",
+        "price": "₺690",
+        "image": ""
+      },
+      {
+        "id": "MK-12",
+        "name": "LINGUINE DI MARE",
+        "desc": "Marine baby ahtapot, marine jumbo karides, San Marzano domatesi, yeşil zeytin, taze kekik, sarımsak ve zeytinyağı. / Marinated baby octopus and jumbo shrimp, San Marzano tomato, green olives, fresh thyme, garlic and olive oil. (670 kcal / porsiyon)",
+        "price": "₺690",
+        "image": ""
+      },
+      {
+        "id": "MK-13",
+        "name": "FETTUCCINE ARANCIO NERO",
+        "desc": "Trüf mantarı püresiyle yoğrulmuş taze fettuccine, krema, trüf mantarı ve taze portakal kabuğu. / Fresh fettuccine infused with truffle purée, cream, truffle and fresh orange zest. (600 kcal / porsiyon)",
+        "price": "₺5.100",
+        "image": ""
       }
     ]
   },
   {
-    "title": "Meşrubatlar",
+    "title": "Salatalar",
     "items": [
       {
-        "name": "Pepsi 1L",
-        "desc": "",
-        "image": "",
-        "price": "₺120"
+        "id": "SL-1",
+        "name": "Insalata al Caffè",
+        "desc": "Suda mozzarella, taze roka, limon kabuğu, espresso-bal sosu ve ince öğütülmüş espresso. / Suda mozzarella, fresh rocket, lemon zest, espresso-honey sauce and finely ground espresso. (460 kcal / porsiyon)",
+        "price": "₺490",
+        "image": ""
       },
       {
-        "name": "Pepsi (330 ml)",
-        "desc": "",
-        "image": "",
-        "price": "₺80"
+        "id": "SL-2",
+        "name": "Insalata alla Pesca",
+        "desc": "Izgara şeftali, taze roka, ricotta peyniri, ceviz içi, taze kekik, portakal kabuğu ve fesleğen yağı. / Izgara şeftali, taze roka, ricotta peyniri, ceviz içi, taze kekik, portakal kabuğu ve fesleğen yağı. (520 kcal / porsiyon)",
+        "price": "₺520",
+        "image": ""
       },
       {
-        "name": "Pepsi Max (1L)",
-        "desc": "Şekersiz",
-        "image": "",
-        "price": "₺120"
+        "id": "SL-3",
+        "name": "Insalata all'Amarena",
+        "desc": "Vişne, suda mozzarella, taze roka, rendelenmiş Parmesan peyniri, acı bal ve kavrulmuş badem. (620 kcal / porsiyon)",
+        "price": "₺560",
+        "image": ""
       },
       {
-        "name": "Pepsi Max (330 ml)",
-        "desc": "Şekersiz",
-        "image": "",
-        "price": "₺80"
+        "id": "SL-4",
+        "name": "Insalata Roast Beef",
+        "desc": "Dana roast beef, taze fesleğen, limon yağı, rendelenmiş pancar, rendelenmiş mor lahana ve kavrulmuş çam fıstığı. / Dana roast beef, taze fesleğen, limon yağı, rendelenmiş pancar, rendelenmiş mor lahana ve kavrulmuş çam fıstığı. (560 kcal / porsiyon)",
+        "price": "₺580",
+        "image": ""
       },
       {
-        "name": "Yedigün (1L)",
-        "desc": "",
-        "image": "",
-        "price": "₺120"
+        "id": "SL-5",
+        "name": "Insalata Tartufo",
+        "desc": "Roka, taze kekik, limonlu ricotta peyniri, trüf püresi, ceviz içi, trüf yağı. / Roka, taze kekik, limonlu ricotta peyniri, trüf püresi, ceviz içi, trüf yağı. (390 kcal / porsiyon)",
+        "price": "₺710",
+        "image": ""
       },
       {
-        "name": "Yedigün (330 ml)",
-        "desc": "",
-        "image": "",
-        "price": "₺80"
+        "id": "SL-6",
+        "name": "Burrata e Pera",
+        "desc": "Burrata peyniri, ızgara armut, rendelenmiş pancar, mor lahana, taze roka, kavrulmuş çam fıstığı ve fesleğen yağı. (720 kcal / porsiyon)",
+        "price": "₺810",
+        "image": ""
+      }
+    ]
+  },
+  {
+    "title": "Tatlılar",
+    "items": [
+      {
+        "id": "TL-1",
+        "name": "Lemon Posset",
+        "desc": "Limon kreması. / Lemon cream. (320 kcal / portion)",
+        "price": "₺120",
+        "image": ""
       },
       {
-        "name": "Icetea Limon (1L)",
-        "desc": "",
-        "image": "",
-        "price": "₺120"
+        "id": "TL-2",
+        "name": "Panna Cotta",
+        "desc": "Vanilyalı panna cotta, orman meyveleri sosu. / Vanilla panna cotta with mixed berries sauce. (430 kcal / portion)",
+        "price": "₺310",
+        "image": ""
       },
       {
-        "name": "Icetea Limon (330 ml)",
-        "desc": "",
-        "image": "",
-        "price": "₺80"
+        "id": "TL-3",
+        "name": "Çikolatalı Sufle",
+        "desc": "Sıcak çikolatalı sufle. / Warm chocolate soufflé. (520 kcal / portion)",
+        "price": "₺280",
+        "image": ""
       },
       {
-        "name": "Icetea Şeftali (1L)",
-        "desc": "",
-        "image": "",
-        "price": "₺120"
+        "id": "TL-4",
+        "name": "Tiramisu",
+        "desc": "Kahveye batırılmış kedi dili, mascarpone kreması, kakao. / Ladyfingers soaked in coffee, mascarpone cream, cocoa. (560 kcal / portion)",
+        "price": "₺390",
+        "image": ""
       },
       {
-        "name": "Icetea Şeftali (330 ml)",
-        "desc": "",
-        "image": "",
-        "price": "₺80"
+        "id": "TL-5",
+        "name": "Marlenka",
+        "desc": "Ballı ince katmanlar ve krema, ceviz ile. / Honey layered cake with cream and walnuts. (640 kcal / portion)",
+        "price": "₺410",
+        "image": ""
       },
       {
-        "name": "Icetea Mango (1L)",
-        "desc": "",
-        "image": "",
-        "price": "₺120"
+        "id": "TL-6",
+        "name": "San Sebastian",
+        "desc": "Karamelize edilmiş dış yüzeyli, yumuşak cheesecake. / Basque-style burnt cheesecake with a creamy center. (680 kcal / portion)",
+        "price": "₺420",
+        "image": ""
+      }
+    ]
+  },
+  {
+    "title": "İçecekler",
+    "items": [
+      {
+        "id": "IC-1",
+        "name": "Su (0.5) Pet Şişe",
+        "desc": "Water (0.5) Pet Bottle",
+        "price": "₺50",
+        "image": ""
       },
       {
-        "name": "Icetea Mango (330 ml)",
-        "desc": "",
-        "image": "",
-        "price": "₺80"
+        "id": "IC-2",
+        "name": "Beypazarı Sade Soda",
+        "desc": "Beypazarı Plain Soda",
+        "price": "₺65",
+        "image": ""
       },
       {
-        "name": "7UP (1L)",
-        "desc": "",
-        "image": "",
-        "price": "₺120"
+        "id": "IC-3",
+        "name": "Özehirsar Ayran Cam Şişe",
+        "desc": "Özehirsar Ayran Glass Bottle",
+        "price": "₺75",
+        "image": ""
       },
       {
-        "name": "Beyoğlu Gazoz",
-        "desc": "",
-        "image": "",
-        "price": "₺95"
+        "id": "IC-4",
+        "name": "Su (0.33) Cam Şişe",
+        "desc": "Water (0.33) Glass Bottle",
+        "price": "₺75",
+        "image": ""
       },
       {
-        "name": "Özerhisar ayran (1L)",
-        "desc": "",
-        "image": "",
-        "price": "₺120"
+        "id": "IC-5",
+        "name": "Doğal Limonata",
+        "desc": "Natural Lemonade (Yeni)",
+        "price": "₺120",
+        "image": ""
       },
       {
-        "name": "Özerhisar ayran (300 ml)",
-        "desc": "",
-        "image": "",
-        "price": "₺80"
+        "id": "IC-6",
+        "name": "Pepsi Cam Şişe",
+        "desc": "Pepsi Glass Bottle",
+        "price": "₺100",
+        "image": ""
       },
       {
-        "name": "St. Pellegrino Mineralli Su (750 ml)",
-        "desc": "Cam şişe",
-        "image": "",
-        "price": "₺350"
+        "id": "IC-7",
+        "name": "Pepsi Max Cam Şişe",
+        "desc": "Pepsi Max Glass Bottle",
+        "price": "₺100",
+        "image": ""
       },
       {
-        "name": "St. Pellegrino Mineralli Su (250 ml)",
-        "desc": "Cam şişe",
-        "image": "",
-        "price": "₺180"
+        "id": "IC-8",
+        "name": "Yedigün Portakal Cam Şişe",
+        "desc": "Yedigün Orange Glass Bottle",
+        "price": "₺100",
+        "image": ""
       },
       {
-        "name": "Su (500 ml)",
-        "desc": "Pet",
-        "image": "",
-        "price": "₺50"
+        "id": "IC-9",
+        "name": "Lipton Icetea Şeftali Kutu",
+        "desc": "Lipton Ice Tea Peach Can",
+        "price": "₺100",
+        "image": ""
       },
       {
-        "name": "Su (33 cl)",
-        "desc": "Cam Şişe",
-        "image": "",
-        "price": "₺75"
+        "id": "IC-10",
+        "name": "Lipton Icetea Limon Kutu",
+        "desc": "Lipton Ice Tea Lemon Can",
+        "price": "₺100",
+        "image": ""
+      },
+      {
+        "id": "IC-11",
+        "name": "Lipton Icetea Mango Kutu",
+        "desc": "Lipton Ice Tea Mango Can",
+        "price": "₺100",
+        "image": ""
+      },
+      {
+        "id": "IC-12",
+        "name": "Beyoğlu Gazoz Cam Şişe",
+        "desc": "Beyoğlu Gazoz Glass Bottle",
+        "price": "₺110",
+        "image": ""
+      },
+      {
+        "id": "IC-13",
+        "name": "Pellegrino Minarelli Su (25cl)",
+        "desc": "San Pellegrino Water (25cl)",
+        "price": "₺220",
+        "image": ""
+      },
+      {
+        "id": "IC-14",
+        "name": "Pellegrino Minarelli Su (75cl)",
+        "desc": "San Pellegrino Water (75cl)",
+        "price": "₺360",
+        "image": ""
       }
     ]
   },
@@ -491,425 +488,260 @@ const defaultMenu = [
     "title": "Sıcak Kahveler",
     "items": [
       {
-        "name": "Caramel Macchiato",
-        "desc": "Sıcak servis edilir",
-        "image": "",
-        "price": "₺190",
-        "options": [
-          {
-            "name": "Boy Seçimi",
-            "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
-            ]
-          },
-          {
-            "name": "Süt Seçimi",
-            "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Espresso",
-        "desc": "Sıcak servis edilir",
-        "image": "",
-        "price": "₺130",
-        "options": [
-          {
-            "name": "Boy Seçimi",
-            "items": [
-              "Espresso (₺130)",
-              "Double Espresso (₺150)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Filtre Kahve",
-        "desc": "Sıcak servis edilir",
-        "image": "",
-        "price": "₺150",
-        "options": [
-          {
-            "name": "Boy Seçimi",
-            "items": [
-              "Small (₺150)",
-              "Medium (₺170)",
-              "Large (₺190)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Cappucino",
-        "desc": "Sıcak servis edilir",
-        "image": "",
-        "price": "₺170",
-        "options": [
-          {
-            "name": "Boy Seçimi",
-            "items": [
-              "Small (₺170)",
-              "Medium (₺190)",
-              "Large (₺210)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
-            ]
-          },
-          {
-            "name": "Süt Seçimi",
-            "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Caramel Latte",
-        "desc": "Sıcak servis edilir",
-        "image": "",
-        "price": "₺190",
-        "options": [
-          {
-            "name": "Boy Seçimi",
-            "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
-            ]
-          },
-          {
-            "name": "Süt Seçimi",
-            "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Americano",
-        "desc": "Sıcak servis edilir",
-        "image": "",
-        "price": "₺150",
-        "options": [
-          {
-            "name": "Boy Seçimi",
-            "items": [
-              "Small (₺150)",
-              "Medium (₺170)",
-              "Large (₺190)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
-            ]
-          }
-        ]
-      },
-      {
+        "id": "SK-1",
         "name": "Coffee Latte",
-        "desc": "Sıcak servis edilir",
-        "image": "",
+        "desc": "Caffe Latte",
         "price": "₺170",
-        "options": [
-          {
-            "name": "Boy Seçimi",
-            "items": [
-              "Small (₺170)",
-              "Medium (₺190)",
-              "Large (₺210)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
-            ]
-          },
-          {
-            "name": "Süt Seçimi",
-            "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "White Mocha",
-        "desc": "Sıcak servis edilir",
         "image": "",
-        "price": "₺190",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
+              "Küçük (₺170)",
+              "Orta (₺190)",
+              "Büyük (₺210)"
             ]
           },
           {
             "name": "Süt Seçimi",
             "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
             ]
           },
           {
-            "name": "Ekstra Şeker Seçimi",
+            "name": "Şurup Seçimi",
             "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
+              "Şurupsuz (+₺0)",
+              "Karamel Şurubu (+₺20)",
+              "Vanilya Şurubu (+₺20)",
+              "Fındık Şurubu (+₺20)"
             ]
           }
         ]
       },
       {
+        "id": "SK-2",
+        "name": "Cappuccino",
+        "desc": "Cappuccino",
+        "price": "₺170",
+        "image": "",
+        "options": [
+          {
+            "name": "Boy Seçimi",
+            "items": [
+              "Küçük (₺170)",
+              "Orta (₺190)",
+              "Büyük (₺210)"
+            ]
+          },
+          {
+            "name": "Süt Seçimi",
+            "items": [
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SK-3",
+        "name": "Americano",
+        "desc": "Americano",
+        "price": "₺150",
+        "image": "",
+        "options": [
+          {
+            "name": "Boy Seçimi",
+            "items": [
+              "Küçük (₺150)",
+              "Orta (₺170)",
+              "Büyük (₺190)"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SK-4",
+        "name": "Filtre Kahve",
+        "desc": "Filter Coffee",
+        "price": "₺150",
+        "image": "",
+        "options": [
+          {
+            "name": "Boy Seçimi",
+            "items": [
+              "Küçük (₺150)",
+              "Orta (₺170)",
+              "Büyük (₺190)"
+            ]
+          },
+          {
+            "name": "Süt Seçimi",
+            "items": [
+              "Normal Süt (+₺0)",
+              "Sütlü (+₺15)"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SK-5",
         "name": "Mocha",
-        "desc": "Sıcak servis edilir",
-        "image": "",
+        "desc": "Mocha",
         "price": "₺190",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           },
           {
             "name": "Süt Seçimi",
             "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
             ]
           }
         ]
+      },
+      {
+        "id": "SK-6",
+        "name": "White Mocha",
+        "desc": "White Mocha",
+        "price": "₺190",
+        "image": "",
+        "options": [
+          {
+            "name": "Boy Seçimi",
+            "items": [
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
+            ]
+          },
+          {
+            "name": "Süt Seçimi",
+            "items": [
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SK-7",
+        "name": "Caramel Latte",
+        "desc": "Caramel Latte",
+        "price": "₺190",
+        "image": "",
+        "options": [
+          {
+            "name": "Boy Seçimi",
+            "items": [
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
+            ]
+          },
+          {
+            "name": "Süt Seçimi",
+            "items": [
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SK-8",
+        "name": "Caramel Macchiato",
+        "desc": "Caramel Macchiato",
+        "price": "₺190",
+        "image": "",
+        "options": [
+          {
+            "name": "Boy Seçimi",
+            "items": [
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
+            ]
+          },
+          {
+            "name": "Süt Seçimi",
+            "items": [
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SK-9",
+        "name": "Espresso",
+        "desc": "Espresso (Klasikler)",
+        "price": "₺130",
+        "image": "",
+        "options": [
+          {
+            "name": "Boy Seçimi",
+            "items": [
+              "Tek (₺130)",
+              "Double (₺150)"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "SK-10",
+        "name": "Türk Kahvesi (Orta Boy)",
+        "desc": "Turkish Coffee (Medium)",
+        "price": "₺120",
+        "image": ""
+      },
+      {
+        "id": "SK-11",
+        "name": "Türk Kahvesi (Double)",
+        "desc": "Turkish Coffee (Double)",
+        "price": "₺180",
+        "image": ""
+      },
+      {
+        "id": "SK-12",
+        "name": "Çay (Standart Boy)",
+        "desc": "Tea (Standard)",
+        "price": "₺75",
+        "image": ""
+      },
+      {
+        "id": "SK-13",
+        "name": "Çay (Büyük Boy)",
+        "desc": "Tea (Large)",
+        "price": "₺120",
+        "image": ""
       }
     ]
   },
@@ -917,563 +749,261 @@ const defaultMenu = [
     "title": "Soğuk Kahveler",
     "items": [
       {
-        "name": "Iced Vanilla Latte",
-        "desc": "Soğuk Servis Edilir",
-        "image": "",
-        "price": "₺190",
-        "options": [
-          {
-            "name": "Boy Seçimi",
-            "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
-            ]
-          },
-          {
-            "name": "Süt Seçimi",
-            "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
-            ]
-          }
-        ]
-      },
-      {
+        "id": "SOK-1",
         "name": "Caramel Ice Banana Latte",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "desc": "Caramel Ice Banana Latte",
         "price": "₺190",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           },
           {
             "name": "Süt Seçimi",
             "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
             ]
           }
         ]
       },
       {
-        "name": "Iced Americano",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "id": "SOK-2",
+        "name": "Ice Vanilya Latte",
+        "desc": "Iced Vanilla Latte",
         "price": "₺190",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Iced Caramel Latte",
-        "desc": "Soğuk servis edilir",
-        "image": "",
-        "price": "₺190",
-        "options": [
-          {
-            "name": "Boy Seçimi",
-            "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           },
           {
             "name": "Süt Seçimi",
             "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
             ]
           }
         ]
       },
       {
-        "name": "Iced Caramel Macchiato",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "id": "SOK-3",
+        "name": "Ice Caramel Latte",
+        "desc": "Iced Caramel Latte",
         "price": "₺190",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           },
           {
             "name": "Süt Seçimi",
             "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
             ]
           }
         ]
       },
       {
-        "name": "Iced Mocha",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "id": "SOK-4",
+        "name": "Ice Americano",
+        "desc": "Iced Americano",
         "price": "₺190",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
-          },
+          }
+        ]
+      },
+      {
+        "id": "SOK-5",
+        "name": "Ice Mocha",
+        "desc": "Iced Mocha",
+        "price": "₺190",
+        "image": "",
+        "options": [
           {
-            "name": "Kahve Seçimi",
+            "name": "Boy Seçimi",
             "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           },
           {
             "name": "Süt Seçimi",
             "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
             ]
           }
         ]
       },
       {
-        "name": "Iced White Mocha",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "id": "SOK-6",
+        "name": "Ice White Mocha",
+        "desc": "Iced White Mocha",
         "price": "₺190",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           },
           {
             "name": "Süt Seçimi",
             "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
             ]
           }
         ]
       },
       {
-        "name": "Iced Green Fıstıklı Latte",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "id": "SOK-7",
+        "name": "Ice Matcha Latte",
+        "desc": "Iced Matcha Latte",
         "price": "₺190",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           },
           {
             "name": "Süt Seçimi",
             "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
             ]
           }
         ]
       },
       {
-        "name": "Iced Fındıklı Mocha",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "id": "SOK-8",
+        "name": "Ice Fındıklı Latte",
+        "desc": "Iced Hazelnut Latte",
         "price": "₺190",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           },
           {
             "name": "Süt Seçimi",
             "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
             ]
           }
         ]
       },
       {
-        "name": "Iced Matcha Latte",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "id": "SOK-9",
+        "name": "Ice Green Fıstıklı Latte",
+        "desc": "Iced Green Pistachio Latte",
         "price": "₺190",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺190)",
-              "Medium (₺210)",
-              "Large (₺230)"
-            ]
-          },
-          {
-            "name": "Kahve Seçimi",
-            "items": [
-              "Standart Espresso",
-              "Kafeinsiz Espresso",
-              "Ekstra Espresso Shot (+₺35)"
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           },
           {
             "name": "Süt Seçimi",
             "items": [
-              "%2 Yağlı Süt",
-              "Laktozsuz Süt",
-              "Badem Sütü (+₺55)",
-              "Soya Sütü (+₺55)"
-            ]
-          },
-          {
-            "name": "Ekstra Şeker Seçimi",
-            "items": [
-              "Beyaz Şeker (+₺5)"
-            ]
-          },
-          {
-            "name": "Ekstra Sos & Şurup Seçimi",
-            "items": [
-              "White Mocha Sos (+₺20)",
-              "Mocha Sos (+₺20)",
-              "Karamel Sos (+₺20)",
-              "Çilek Sos (+₺20)",
-              "Nane Şurubu (+₺30)",
-              "Fındık Şurubu (+₺30)",
-              "Boğürtlen Şurubu (+₺30)",
-              "Karamel Şurubu (+₺30)",
-              "Vanilya Şurubu (+₺30)"
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "title": "Sıcak İçecekler",
-    "items": [
-      {
-        "name": "Türk Kahvesi",
-        "desc": "Sıcak servis edilir",
-        "image": "",
-        "price": "₺120",
-        "options": [
-          {
-            "name": "Boy Seçimi",
-            "items": [
-              "Türk Kahvesi (₺120)",
-              "Double Türk Kahvesi (₺180)"
-            ]
-          },
-          {
-            "name": "Kahvenizi Nasıl İstersiniz?",
-            "items": [
-              "Sade (+₺Şekerli)"
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
             ]
           }
         ]
       },
       {
-        "name": "Çay",
-        "desc": "Sıcak servis edilir",
+        "id": "SOK-10",
+        "name": "Ice Caramel Macchiato",
+        "desc": "Iced Caramel Macchiato",
+        "price": "₺190",
         "image": "",
-        "price": "₺75",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Standart Boy (₺75)",
-              "Büyük Boy (₺120)"
+              "Küçük (₺190)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
+            ]
+          },
+          {
+            "name": "Süt Seçimi",
+            "items": [
+              "Normal Süt (+₺0)",
+              "Laktozsuz Süt (+₺15)",
+              "Soya Sütü (+₺30)",
+              "Badem Sütü (+₺30)",
+              "Yulaf Sütü (+₺30)"
             ]
           }
         ]
@@ -1484,141 +1014,106 @@ const defaultMenu = [
     "title": "Soğuk İçecekler",
     "items": [
       {
+        "id": "SI-1",
         "name": "Naneli Cool Lime",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "desc": "Mint Cool Lime",
         "price": "₺170",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺170)",
-              "Medium (₺210)",
-              "Large (₺230)"
+              "Küçük (₺170)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           }
         ]
       },
       {
+        "id": "SI-2",
         "name": "Çilekli Cool Lime",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "desc": "Strawberry Cool Lime",
         "price": "₺170",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺170)",
-              "Medium (₺210)",
-              "Large (₺230)"
+              "Küçük (₺170)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           }
         ]
       },
       {
+        "id": "SI-3",
         "name": "Berry Hibiscus",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "desc": "Berry Hibiscus",
         "price": "₺170",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺170)",
-              "Medium (₺210)",
-              "Large (₺230)"
+              "Küçük (₺170)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           }
         ]
       },
       {
-        "name": "Banana&Strawberry Iced Milk",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "id": "SI-4",
+        "name": "Banana & Strawberry Ice Milk",
+        "desc": "Banana & Strawberry Ice Milk",
         "price": "₺170",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺170)",
-              "Medium (₺210)",
-              "Large (₺230)"
+              "Küçük (₺170)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           }
         ]
       },
       {
+        "id": "SI-5",
         "name": "Mango Fresha",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "desc": "Mango Fresha",
         "price": "₺170",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺170)",
-              "Medium (₺210)",
-              "Large (₺230)"
+              "Küçük (₺170)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           }
         ]
       },
       {
+        "id": "SI-6",
         "name": "Ananas Fresha",
-        "desc": "Soğuk servis edilir",
-        "image": "",
+        "desc": "Pineapple Fresha",
         "price": "₺170",
+        "image": "",
         "options": [
           {
             "name": "Boy Seçimi",
             "items": [
-              "Small (₺170)",
-              "Medium (₺210)",
-              "Large (₺230)"
+              "Küçük (₺170)",
+              "Orta (₺210)",
+              "Büyük (₺230)"
             ]
           }
         ]
-      }
-    ]
-  },
-  {
-    "title": "Tatlılar",
-    "items": [
-      {
-        "name": "Çikolatalı Sufle",
-        "desc": "Yoğun kakao aroması ve akışkan çikolata dolgusuyla hazırlanan sıcak lezzet.",
-        "image": "",
-        "price": "₺250"
-      },
-      {
-        "name": "Marlenka",
-        "desc": "Balın karakteristik aromasıyla katmanlanan, yumuşak dokusu ve yoğun lezzetiyle öne çıkan özel tarif.",
-        "image": "",
-        "price": "₺390"
-      },
-      {
-        "name": "San Sebastian",
-        "desc": "Karamelize yüzeyi ve akışkan dokusuyla servis edilen, modern pastacılığın en sevilen yorumlarından biri",
-        "image": "",
-        "price": "₺390"
-      },
-      {
-        "name": "Lemon Posset",
-        "desc": "Taze limonun ferah karakterini kadifemsi krema dokusuyla buluşturan, hafif ve zarif İngiliz klasiği. Yemek sonrası için kusursuz bir final.",
-        "image": "",
-        "price": "₺60"
-      },
-      {
-        "name": "Panna Cotta",
-        "desc": "İpeksi dokusu ve hafif vanilya aromasıyla tatlı bir ferahlık sunan İtalyan klasiği",
-        "image": "",
-        "price": "₺250"
-      },
-      {
-        "name": "Tiramisu",
-        "desc": "Mascarpone kreması, espresso ve kakao notalarının kusursuz dengesiyle hazırlanan zamansız İtalyan klasiği",
-        "image": "",
-        "price": "₺360"
       }
     ]
   }
