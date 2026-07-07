@@ -1,9 +1,11 @@
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const CartDrawer = () => {
   const { items, isCartOpen, closeCart, updateQuantity, removeItem, totalItems, totalPrice } = useCart();
+  const { t, language } = useLanguage();
 
   return (
     <>
@@ -25,10 +27,10 @@ const CartDrawer = () => {
           <div className="flex items-center gap-3">
             <ShoppingBag size={22} className="text-porta-red" />
             <h2 className="text-xl font-heading font-bold text-porta-dark">
-              Sepetim
+              {t('cartTitle')}
               {totalItems > 0 && (
                 <span className="ml-2 text-sm font-body font-normal text-gray-500">
-                  ({totalItems} ürün)
+                  {language === 'tr' ? `(${totalItems} ürün)` : `(${totalItems} items)`}
                 </span>
               )}
             </h2>
@@ -48,8 +50,10 @@ const CartDrawer = () => {
               <div className="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center mb-4">
                 <ShoppingBag size={32} className="text-gray-300" />
               </div>
-              <p className="text-gray-400 font-medium mb-2">Sepetiniz boş</p>
-              <p className="text-sm text-gray-400">Menüden lezzetli ürünler ekleyin!</p>
+              <p className="text-gray-400 font-medium mb-2">{t('cartEmpty')}</p>
+              <p className="text-sm text-gray-400">
+                {language === 'tr' ? 'Menüden lezzetli ürünler ekleyin!' : 'Add delicious items from the menu!'}
+              </p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -110,7 +114,7 @@ const CartDrawer = () => {
         {items.length > 0 && (
           <div className="border-t border-gray-100 p-5 space-y-4 bg-white">
             <div className="flex items-center justify-between">
-              <span className="text-gray-600 font-medium">Toplam</span>
+              <span className="text-gray-600 font-medium">{t('cartTotal')}</span>
               <span className="text-2xl font-bold text-porta-dark">₺{totalPrice}</span>
             </div>
             <Link
@@ -118,7 +122,7 @@ const CartDrawer = () => {
               onClick={closeCart}
               className="block w-full bg-porta-red hover:bg-red-700 text-white text-center py-4 rounded-xl font-semibold text-lg transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-red-200"
             >
-              Siparişi Tamamla
+              {t('cartComplete')}
             </Link>
           </div>
         )}

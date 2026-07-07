@@ -180,7 +180,8 @@ const defaultMenu = [
         "id": "PZ-11",
         "name": "LUNA ROSSA",
         "desc": "Domates sosu, mozzarella, burrata, vişne, kavrulmuş ceviz, fesleğen yağı, limon kabuğu ve acı bal. / Tomato sauce, mozzarella, burrata, sour cherries, roasted walnuts, basil oil, lemon zest and hot honey. (1300 kcal)",
-        "price": "/images/luna-rossa.png"
+        "price": "₺1.250",
+        "image": "/images/luna-rossa.png"
       },
       {
         "id": "PZ-12",

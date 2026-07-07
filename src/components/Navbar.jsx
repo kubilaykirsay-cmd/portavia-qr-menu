@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 
 const Navbar = () => {
   const [tableNumber, setTableNumber] = useState('');
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     const handleTableUpdate = () => {
@@ -38,13 +40,37 @@ const Navbar = () => {
           </a>
           {tableNumber && (
             <span className="bg-porta-red/10 text-porta-red text-xs px-2.5 py-1 rounded-full font-bold">
-              Masa {tableNumber}
+              {t('tableNo')} {tableNumber}
             </span>
           )}
         </div>
 
-        {/* Right: Cart Button */}
-        <div className="flex items-center gap-3">
+        {/* Right: Language Flags + Cart Button */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 border-r border-gray-200 pr-3">
+            <button
+              onClick={() => setLanguage('tr')}
+              className={`text-xl transition-all hover:scale-110 p-1 rounded-lg cursor-pointer ${
+                language === 'tr'
+                  ? 'bg-gray-100 scale-105 saturate-100 border border-gray-200'
+                  : 'opacity-50 saturate-50 hover:opacity-100'
+              }`}
+              title="Türkçe"
+            >
+              🇹🇷
+            </button>
+            <button
+              onClick={() => setLanguage('en')}
+              className={`text-xl transition-all hover:scale-110 p-1 rounded-lg cursor-pointer ${
+                language === 'en'
+                  ? 'bg-gray-100 scale-105 saturate-100 border border-gray-200'
+                  : 'opacity-50 saturate-50 hover:opacity-100'
+              }`}
+              title="English"
+            >
+              🇺🇸
+            </button>
+          </div>
           <CartButton />
         </div>
       </div>

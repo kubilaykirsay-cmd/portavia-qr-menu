@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { Bell, X, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { addWaiterCall } from '../data/mockStore';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function WaiterCallButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [tableNumber, setTableNumber] = useState('');
   const [savedTable, setSavedTable] = useState('');
   const [status, setStatus] = useState('idle'); // idle, calling, success
+  const { t } = useLanguage();
 
   useEffect(() => {
     const table = localStorage.getItem('portavia_table_number') || '';
@@ -48,7 +50,7 @@ export default function WaiterCallButton() {
       <motion.button
         onClick={() => setIsOpen(true)}
         className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-40 bg-porta-red text-white py-3.5 px-5 rounded-full shadow-2xl hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer flex items-center justify-center border border-white/10 group gap-2"
-        aria-label="Garson Çağır"
+        aria-label={t('waiterCall')}
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
@@ -56,7 +58,7 @@ export default function WaiterCallButton() {
         <span className="absolute inset-0 rounded-full bg-porta-red animate-ping opacity-20"></span>
         <Bell className="w-5 h-5 animate-pulse group-hover:rotate-12 transition-transform duration-200" />
         <span className="font-semibold text-sm whitespace-nowrap">
-          Garson Çağır
+          {t('waiterCall')}
         </span>
       </motion.button>
 
@@ -97,35 +99,35 @@ export default function WaiterCallButton() {
                       <Bell className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-porta-dark">Garson Çağır</h3>
-                      <p className="text-sm text-gray-500 font-light">Masanıza garson çağırmak için formu onaylayın.</p>
+                      <h3 className="text-xl font-bold text-porta-dark">{t('waiterCall')}</h3>
+                      <p className="text-sm text-gray-500 font-light">{t('waiterCallDesc')}</p>
                     </div>
                   </div>
 
                   <form onSubmit={handleCall} className="space-y-5">
                     {savedTable ? (
                       <div className="bg-porta-cream rounded-2xl p-5 border border-gray-100 text-center">
-                        <p className="text-sm text-gray-500 mb-1">Kayıtlı Masa Numarası</p>
-                        <p className="text-4xl font-bold font-heading text-porta-red mb-3">Masa {savedTable}</p>
+                        <p className="text-sm text-gray-500 mb-1">{t('tableNo')} {t('waiterCallInputLabel')}</p>
+                        <p className="text-4xl font-bold font-heading text-porta-red mb-3">{t('tableNo')} {savedTable}</p>
                         <button
                           type="button"
                           onClick={handleResetTable}
                           className="text-xs text-gray-500 underline hover:text-porta-red transition-colors cursor-pointer"
                         >
-                          Masa Numarasını Değiştir
+                          {t('waiterCallChange')}
                         </button>
                       </div>
                     ) : (
                       <div>
                         <label htmlFor="table-input" className="block text-sm font-semibold text-gray-700 mb-2">
-                          Masa Numarası
+                          {t('waiterCallInputLabel')}
                         </label>
                         <input
                           id="table-input"
                           type="text"
                           pattern="[0-9]*"
                           inputMode="numeric"
-                          placeholder="Örn: 5"
+                          placeholder={t('waiterCallInputPlaceholder')}
                           value={tableNumber}
                           onChange={(e) => setTableNumber(e.target.value.replace(/\D/g, ''))}
                           required
@@ -139,7 +141,7 @@ export default function WaiterCallButton() {
                       type="submit"
                       className="w-full bg-porta-red hover:bg-red-700 text-white py-4 rounded-2xl font-bold shadow-lg shadow-porta-red/20 transition-all duration-200 active:scale-[0.98] cursor-pointer"
                     >
-                      Garson Çağır
+                      {t('waiterCall')}
                     </button>
                   </form>
                 </div>
@@ -148,8 +150,8 @@ export default function WaiterCallButton() {
               {status === 'calling' && (
                 <div className="py-8 text-center flex flex-col items-center">
                   <div className="w-16 h-16 border-4 border-porta-red/20 border-t-porta-red rounded-full animate-spin mb-6"></div>
-                  <h3 className="text-lg font-bold text-porta-dark mb-1">Çağrı İletiliyor...</h3>
-                  <p className="text-sm text-gray-500">Lütfen bekleyin, çağrınız sisteme aktarılıyor.</p>
+                  <h3 className="text-lg font-bold text-porta-dark mb-1">{t('waiterCalling')}</h3>
+                  <p className="text-sm text-gray-500">{t('waiterCallDesc')}</p>
                 </div>
               )}
 
@@ -163,9 +165,9 @@ export default function WaiterCallButton() {
                   >
                     <CheckCircle className="w-16 h-16" />
                   </motion.div>
-                  <h3 className="text-2xl font-bold text-porta-dark mb-2">Garson Çağrıldı!</h3>
+                  <h3 className="text-2xl font-bold text-porta-dark mb-2">{t('waiterCalled')}</h3>
                   <p className="text-sm text-gray-500 max-w-xs mx-auto leading-relaxed">
-                    Masa <span className="font-bold text-porta-red">{savedTable}</span> için çağrı yapıldı. Garsonumuz en kısa sürede masanıza yönelecektir.
+                    {t('waiterCallSuccess').replace('{table}', savedTable)}
                   </p>
                 </div>
               )}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 import { Plus, Minus, X, ShoppingBag } from 'lucide-react';
 import { useMenu } from '../data/mockStore';
 
@@ -8,6 +9,7 @@ const Menu = () => {
   const menuCategories = useMenu();
   const { addItem } = useCart();
   const [selectedItem, setSelectedItem] = useState(null);
+  const { t, translateDesc, language } = useLanguage();
 
   return (
     <div className="pt-24 pb-16 bg-porta-cream min-h-screen">
@@ -21,10 +23,14 @@ const Menu = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-5xl md:text-6xl font-heading font-bold text-porta-dark mb-4">
-              Lezzet <span className="text-porta-red">Menümüz</span>
+              {language === 'tr' ? (
+                <>Lezzet <span className="text-porta-red">Menümüz</span></>
+              ) : (
+                <>Our <span className="text-porta-red">Menu</span></>
+              )}
             </h1>
             <p className="text-lg text-gray-600 font-light">
-              Taze malzemeler ve ustalıkla hazırlanan menümüzü keşfedin.
+              {t('menuHeaderSubtitle')}
             </p>
           </motion.div>
         </div>
@@ -52,7 +58,7 @@ const Menu = () => {
                 }}
                 className="bg-white text-porta-dark border border-gray-200 px-4.5 py-2.5 rounded-full text-xs font-bold hover:border-porta-red hover:text-porta-red transition-all cursor-pointer shadow-sm active:scale-95"
               >
-                {category.title}
+                {t(category.title)}
               </button>
             );
           })}
@@ -71,7 +77,7 @@ const Menu = () => {
             >
               <h2 className="text-3xl font-heading font-bold text-porta-dark border-b-2 border-porta-red/20 pb-4 mb-8 flex items-center gap-3">
                 <span className="w-3 h-3 rounded-full bg-porta-red inline-block"></span>
-                {category.title}
+                {t(category.title)}
               </h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -111,14 +117,14 @@ const Menu = () => {
                       </div>
                       
                       <p className="text-xs md:text-sm text-gray-500 font-light leading-relaxed line-clamp-2 mb-3">
-                        {item.desc}
+                        {translateDesc(item.desc)}
                       </p>
                       
                       {/* Customizable Indicator Badge */}
                       {item.options && item.options.length > 0 && (
                         <div className="mt-auto pt-2">
                           <span className="bg-gray-100 text-gray-500 text-[10px] px-2 py-1 rounded-md font-bold uppercase tracking-wider">
-                            Özelleştirilebilir
+                            {t('customizable')}
                           </span>
                         </div>
                       )}
@@ -136,7 +142,7 @@ const Menu = () => {
                         className="mt-3 flex items-center justify-center gap-1.5 w-full bg-porta-red/10 hover:bg-porta-red text-porta-red hover:text-white py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all duration-200 active:scale-95 cursor-pointer"
                       >
                         <Plus size={16} />
-                        <span>Sepete Ekle</span>
+                        <span>{t('modalAddToCart')}</span>
                       </button>
                       
                     </div>
@@ -165,6 +171,7 @@ const Menu = () => {
 
 // Product details modal with customization options
 const ProductModal = ({ item, onClose, onAdd }) => {
+  const { t, translateDesc, translateOption, language } = useLanguage();
   const [quantity, setQuantity] = useState(1);
   const [selectedOpts, setSelectedOpts] = useState({});
 
@@ -237,11 +244,16 @@ const ProductModal = ({ item, onClose, onAdd }) => {
       }
     });
 
+    // Translate selected options list to correct target language names
+    const translatedOptions = selectedOptionsList.map(optVal => {
+      return translateOption(optVal);
+    });
+
     onAdd({
       ...item,
       price: '₺' + singlePrice,
       quantity,
-      selectedOptions: selectedOptionsList
+      selectedOptions: translatedOptions
     });
     onClose();
   };
@@ -284,7 +296,7 @@ const ProductModal = ({ item, onClose, onAdd }) => {
                 {item.name}
               </h3>
               <p className="text-sm text-gray-500 font-light leading-relaxed">
-                {item.desc || 'Bu enfes lezzeti mutlaka deneyin.'}
+                {translateDesc(item.desc) || (language === 'tr' ? 'Bu enfes lezzeti mutlaka deneyin.' : 'Make sure to try this delicious item.')}
               </p>
             </div>
 
@@ -297,10 +309,10 @@ const ProductModal = ({ item, onClose, onAdd }) => {
                     <div key={optIdx} className="space-y-3">
                       <div className="flex items-center justify-between">
                         <h4 className="font-bold text-sm text-gray-700 uppercase tracking-wider">
-                          {opt.name}
+                          {opt.name === 'Boy Seçimi' ? t('modalSize') : opt.name === 'Süt Seçimi' ? t('modalSut') : opt.name === 'Şurup Seçimi' ? t('modalSyrup') : opt.name}
                         </h4>
                         <span className="text-[11px] text-gray-400 font-medium">
-                          {isSingle ? 'Tekli Seçim' : 'Çoklu Seçim'}
+                          {isSingle ? t('singleSelect') : t('multiSelect')}
                         </span>
                       </div>
 
@@ -336,7 +348,7 @@ const ProductModal = ({ item, onClose, onAdd }) => {
                                   : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
                               }`}
                             >
-                              <span>{optItemName}</span>
+                              <span>{translateOption(optItemName)}</span>
                               {optItemPrice && (
                                 <span className={`ml-1 text-[10px] ${isSelected ? 'text-white/80' : 'text-gray-400'}`}>
                                   {optItemPrice}
@@ -376,7 +388,7 @@ const ProductModal = ({ item, onClose, onAdd }) => {
             className="flex-1 bg-porta-red hover:bg-red-700 text-white py-4 px-6 rounded-2xl font-bold shadow-lg shadow-porta-red/15 transition-all duration-200 active:scale-[0.98] cursor-pointer flex items-center justify-center gap-2"
           >
             <ShoppingBag size={18} />
-            <span>Sepete Ekle</span>
+            <span>{t('modalAddToCart')}</span>
             <span className="bg-white/20 px-2 py-0.5 rounded-lg text-sm font-semibold">
               ₺{totalPrice}
             </span>

@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
+import { LanguageProvider } from './context/LanguageContext';
 import MainLayout from './layouts/MainLayout';
 import Menu from './pages/Menu';
 import Checkout from './pages/Checkout';
@@ -8,18 +9,20 @@ import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
-    <CartProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Menu />} />
-            <Route path="checkout" element={<Checkout />} />
-          </Route>
-          <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        </Routes>
-      </Router>
-    </CartProvider>
+    <LanguageProvider>
+      <CartProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<MainLayout />}>
+              <Route index element={<Menu />} />
+              <Route path="checkout" element={<Checkout />} />
+            </Route>
+            <Route path="/admin" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          </Routes>
+        </Router>
+      </CartProvider>
+    </LanguageProvider>
   );
 }
 
