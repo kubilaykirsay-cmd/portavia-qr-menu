@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Mail, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Lock, User, Eye, EyeOff, AlertCircle } from 'lucide-react';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -16,11 +16,11 @@ export default function AdminLogin() {
     setLoading(true);
 
     setTimeout(() => {
-      if (email === 'admin@portavia.com' && password === 'portavia2024') {
+      if (username === 'admin' && password === '12345') {
         localStorage.setItem('isAdminLoggedIn', 'true');
         navigate('/admin/dashboard');
       } else {
-        setError('E-posta veya şifre hatalı. Lütfen tekrar deneyin.');
+        setError('Kullanıcı adı veya şifre hatalı. Lütfen tekrar deneyin.');
       }
       setLoading(false);
     }, 600);
@@ -70,15 +70,15 @@ export default function AdminLogin() {
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                E-posta
+                Kullanıcı Adı
               </label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-gray-500" />
+                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-gray-500" />
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@portavia.com"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Kullanıcı adı"
                   required
                   className="w-full bg-gray-800/50 border border-gray-700 rounded-xl pl-11 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-porta-red/50 focus:border-porta-red/50 transition-all duration-200"
                 />
